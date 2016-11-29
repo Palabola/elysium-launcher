@@ -1,6 +1,7 @@
 .idea/
 release/
 node_modules/
-front/assets/styles.css
 src/node_modules/
 src/app/assets/styles/styles.css
+src/npm-debug.log
+npm-debug.log
