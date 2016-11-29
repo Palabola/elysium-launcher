@@ -1,11 +1,10 @@
-const EventEmitter = require('events').EventEmitter,
-      WebTorrent   = require('webtorrent'),
-      spawn        = require('child_process').spawn,
-      moment       = require('moment'),
-      _7z          = require('win-7zip')['7z'],
-      path         = require('path'),
-      fs           = require('fs-extra'),
-      util         = require('util');
+const EventEmitter  = require('events').EventEmitter,
+      WebTorrent    = require('webtorrent'),
+      spawn         = require('child_process').spawn,
+      moment        = require('moment'),
+      path          = require('path'),
+      fs            = require('fs-extra'),
+      util          = require('util');
 
 const status = {
     idle: 0,
@@ -90,6 +89,8 @@ const Installer = function ( opts, electron ) {
                 self.emit('in-progress', 'Started installing World of Warcraft 1.12');
                 self._setStatus(status.installing);
                 electron.log('Started installing World of Warcraft 1.12');
+
+                let _7z = (  process.env.NODE_ENV != 'development' ) ? path.join( self._paths.app, 'node_modules/win-7zip/7zip-lite/7z.exe').replace('app.asar', 'app.asar.unpacked' ) : require('win-7zip')['7z']
 
                 let extract = spawn(_7z, ['x', path.join(self._paths.download, self._paths.file), '-y', '-o' + self._paths.extract]);
 

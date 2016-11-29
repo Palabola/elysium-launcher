@@ -29,6 +29,7 @@ $(() => {
             download: paths.download,
             extract: paths.cache,
             install: paths.game,
+            app: paths.app,
             file: "World of Warcraft 1.12 Client.rar"
         },
         realmlist: "logon.elysium-project.org",

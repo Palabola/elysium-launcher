@@ -7,6 +7,7 @@ const { ipcMain , app, BrowserWindow } = require('electron'),
 
 global.paths = {
     base: path.join(__dirname),
+    app: app.getAppPath(),
     home: path.join(process.env.APPDATA, '.elysium'),
     download: path.join(process.env.APPDATA, '.elysium', 'download'),
     game: path.join(process.env.APPDATA, '.elysium', 'game'),

@@ -9,6 +9,7 @@ html {
   background: url('images/bg.png');
   width: 640px;
   height: 402px;
+  overflow: hidden;
 }
 .content-wrapper .logo {
   position: absolute;
