@@ -1,0 +1,6 @@
+.idea/
+release/
+node_modules/
+front/assets/styles.css
+src/node_modules/
+src/app/assets/styles/styles.css

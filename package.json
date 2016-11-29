@@ -1,0 +1,40 @@
+{
+  "name": "elysium-launcher",
+  "version": "1.0.0",
+  "description": "WoW Installer/Launcher for elysium servers.",
+  "keywords": [
+    "wow",
+    "warcraft",
+    "elysium",
+    "launcher"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digipixel-io/elysium-launcher.git"
+  },
+  "main": "",
+  "scripts": {
+    "build": "npm run compile-less && build",
+    "compile-less": "gulp compile-both"
+  },
+  "build": {
+    "productName": "Elysium WoW",
+    "compression": "maximum"
+  },
+  "directories": {
+    "buildResources": "resources",
+    "output": "release",
+    "app": "src"
+  },
+  "devDependencies": {
+    "electron": "^1.4.8",
+    "electron-builder": "^8.6.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.13",
+    "gulp-less": "^3.3.0",
+    "gulp-less-watcher": "^0.5.0",
+    "gulp-load-plugins": "^1.4.0"
+  },
+  "author": "digipixel-io",
+  "license": "MIT"
+}

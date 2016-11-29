@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./assets/styles/reset.css"/>
+    <link rel="stylesheet" href="./assets/styles/loaders.min.css"/>
+    <link rel="stylesheet" href="./assets/styles/styles.css"/>
+</head>
+<body>
+<div class="window-wrapper">
+    <div class="window-header">
+        <img src="./assets/images/wow.png" class="icon"/>
+        <span class="title">Elysium Project</span>
+        <ul>
+            <li><a href="#" id="close"></a></li>
+            <li><a href="#" id="min"></a></li>
+        </ul>
+    </div>
+    <div class="window-l"></div>
+    <div class="window-r"></div>
+    <div class="window-b"></div>
+    <div class="window-cbl"></div>
+    <div class="window-cbr"></div>
+    <div class="window">
+        <div class="content">
+            <webview id="webview" src="../../front/news.html"></webview>
+            <span class="connect-err">Cannot Connect to the News Server.<br>Please Check the network and try again alter.</span>
+        </div>
+        <div class="play-bar">
+            <a href="#" class="play"></a>
+            <a href="#" class="btn btn-1"><span>Options</span></a>
+            <a href="#" class="btn btn-2"><span>Elysium</span></a>
+            <a href="#" class="btn btn-3"><span>Community</span></a>
+        </div>
+        <div class="options-wrapper">
+            <div class="title">
+                <h1>Elysium Project Settings and Options</h1>
+                <div class="line"></div>
+            </div>
+            <div class="options">
+                <div class="line"></div>
+                <section>
+                    <span>Clears WoW's cache, this can help if you run into bugs.</span>
+                    <a href="#" class="opt-btn clear-cache">Clear Cache</a>
+                </section>
+                <div class="line"></div>
+                <section>
+                    <span>Clears WoW's WTF files, this can help if you run into bugs.</span>
+                    <a href="#" class="opt-btn clear-wtf">Clear WTF</a>
+                </section>
+                <div class="line"></div>
+                <section>
+                    <span>Open the folder where WoW was installed.</span>
+                    <a href="#" class="opt-btn open-install">Open Folder</a>
+                </section>
+                <div class="line"></div>
+                <section>
+                    <span>Opens the addons folder.</span>
+                    <a href="#" class="opt-btn open-addons">Open Addons</a>
+                </section>
+                <div class="line"></div>
+            </div>
+            <div class="bottom">
+                <a href="#" class="opt-btn close-opts">Ok</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script> require('./index.js'); </script>
+</body>
+</html>

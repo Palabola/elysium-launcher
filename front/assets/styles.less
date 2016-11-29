@@ -1,0 +1,128 @@
+body, html{
+  width: 640px;
+  height: 402px;
+  overflow: hidden;
+  font: 13px Helmet, Freesans, sans-serif;
+}
+
+.content-wrapper{
+  background: url('./images/bg.png');
+  width: 640px;
+  height: 402px;
+
+  .logo{
+    position: absolute;
+    width: 220px;
+    height: 90px;
+    left: 50%;
+    margin-left: -110px;
+    margin-top: 5px;
+  }
+
+  .header-wrap{
+    width: 100%;
+    height: 25px;
+    border-bottom: 1px solid #600301;
+
+    .banner {
+      width: 84px;
+      height: 25px;
+      background: url('./images/header.png');
+      float: left;
+      margin-left: -5px;
+      margin-top: -25px;
+      z-index: 1000;
+      color: #e69e06;
+      padding: 12px 5px 0 19px;
+      font-size: 10px;
+      font-style: italic;
+    }
+
+    .banner-fade {
+      width: 90%;
+      height: 10px;
+      background: linear-gradient(to right, rgba(96,3,1,0.7) 0%,rgba(96,3,1,0) 100%);
+      float: left;
+      margin-top: 15px;
+
+    }
+
+    a {
+      float: right;
+      text-decoration: none;
+      font-size: 8px;
+      margin-top: -11px;
+      margin-right: 5px;
+      color: #440201;
+    }
+  }
+
+
+  .content{
+    position: absolute;
+    top: 90px;
+    left: 200px;
+    bottom: 15px;
+    right: 20px;
+  }
+
+  section{
+    margin-bottom: 15px;
+    clear: both;
+
+    .list-wrapper {
+
+
+      ul{
+
+        &.icon{
+          width: 10%;
+          float: left;
+
+          li{
+            display: block;
+            margin: 5px auto;
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        &.list{
+          width: 90%;
+          list-style: inside url('./images/bullet.png');
+          float: right;
+
+          li{
+            margin: 5px 0 5px 10px;
+
+            div{
+              display: block;
+
+              a{
+                display: inline-block ;
+                font-weight: bold;
+                color: rgba( 0,0,0,.7 );
+                text-decoration: none;
+                text-shadow: 0 0 3px rgba(0, 0, 0, .2);
+
+              }
+
+              span{
+                display: inline-block ;
+                margin-left: 20px;
+                color: rgba( 0,0,0,.7 );
+                text-shadow: 0 0 3px rgba(0, 0, 0, .2);
+              }
+
+              .line{
+                border-bottom: 1px solid rgba( 0,0,0,.2 );
+                width: 95%;
+                float: right;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
