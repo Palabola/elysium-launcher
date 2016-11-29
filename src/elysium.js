@@ -32,9 +32,41 @@ const logger = new ( winston.Logger )({
     ]
 });
 
-
 // enable experimental css
 app.commandLine.appendSwitch('--enable-experimental-web-platform-features');
+
+
+function Window( w, h, html, callback){
+
+    windows.main = new BrowserWindow({
+        width: w,
+        height: h,
+        transparent: true,
+        frame: false,
+        show: false,
+        resizable: false,
+        maximizable: false
+    });
+
+    windows.main.loadURL(url.format({
+        pathname: path.join(__dirname, 'app', html ),
+        protocol: 'file:',
+        slashes: true
+    }));
+
+    windows.main.once('ready-to-show', () => {
+        windows.main.show();
+        windows.main.focus();
+        if (process.env.NODE_ENV == 'development') {
+            windows.main.webContents.openDevTools();
+        }
+        callback();
+    });
+
+    windows.main.on('closed', () => {
+        windows.main = null
+    });
+}
 
 app.on('ready', () => {
 
@@ -55,49 +87,13 @@ app.on('ready', () => {
                         logger.log('error', err);
                     }
                     fs.access(paths.wow, fs.F_OK, (err) => {
-
-                        let window = {};
-
                         if (!err) {
                             //wow.exe not missing
-                            window.width = 646;
-                            window.height = 513;
-                            window.file = 'index.html';
+                            Window( 646, 513, 'index.html', () => {});
                         } else {
                             //wow.exe missing, run installer
-                            window.width = 646;
-                            window.height = 543;
-                            window.file = 'install.html';
+                            Window( 646, 543, 'install.html', () => {});
                         }
-
-                        windows.main = new BrowserWindow({
-                            width: window.width,
-                            height: window.height,
-                            transparent: true,
-                            frame: false,
-                            show: false,
-                            resizable: false,
-                            maximizable: false
-                        });
-
-                        windows.main.loadURL(url.format({
-                            pathname: path.join(__dirname, 'app', window.file),
-                            protocol: 'file:',
-                            slashes: true
-                        }));
-
-                        windows.main.once('ready-to-show', () => {
-                            windows.main.show();
-                            windows.main.focus();
-                            if (process.env.NODE_ENV == 'development') {
-                                windows.main.webContents.openDevTools();
-                            }
-                        });
-
-                        windows.main.on('closed', () => {
-                            windows.main = null
-                        });
-
                     });
                 });
             });
@@ -105,8 +101,9 @@ app.on('ready', () => {
     });
 });
 
+let reinstall = false;
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+    if ( reinstall != true ) {
         app.quit()
     }
 });
@@ -119,4 +116,13 @@ ipcMain.on('log', (event, arg) => {
 ipcMain.on('err', (event, arg) => {
     console.log(arg);
     logger.log('error', arg);
+});
+
+ipcMain.on('reinstall', ( event, arg ) => {
+    reinstall = true;
+    windows.main.close();
+    windows.main = null;
+    Window( 646, 543, 'install.html', () => {
+        reinstall = false;
+    });
 });

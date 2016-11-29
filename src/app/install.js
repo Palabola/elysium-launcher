@@ -29,16 +29,13 @@ $(() => {
             download: paths.download,
             extract: paths.cache,
             install: paths.game,
-            app: paths.app,
-            file: "World of Warcraft 1.12 Client.rar"
+            app: paths.app
         },
+        file: "World of Warcraft 1.12 Client.rar",
+        checksum: '3a4b4d12e02e08b3ee4686fa56e8b2c3855e7001',
         realmlist: "logon.elysium-project.org",
         uri: "magnet:?xt=urn:btih:2b32e64f6cd755a9e54d60e205a9681d6670cfae&dn=World+of+Warcraft+Client+-+Version+1.12.1+enUS+-+Windows&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
     }, electron );
-
-    installer.on('ready', () => {
-        install_wrapper.fadeOut(250);
-    });
 
     installer.on('dl-progress', (data) => {
         download_status.html(`Downloading: ${data.downloaded} / ${data.length} @ ${data.speed.download} <br> ${data.remaining}`);
@@ -63,6 +60,7 @@ $(() => {
             case 'idle':
                 break;
             case 'downloading':
+                install_wrapper.fadeOut(250);
                 download_wrapper.fadeIn(250);
                 break;
             case 'installing':
@@ -76,14 +74,17 @@ $(() => {
                 installed_wrapper.html('<h1>World of Warcraft v1.12 Installed!</h1>');
                 installed_wrapper.fadeIn(250);
                 play.removeClass('disable');
-                play.click(() => {
-                    var child = cp.spawn(paths.wow, [], {detached: true, stdio: 'ignore'});
-                    child.unref();
-                    electron.close();
-                });
                 break;
         }
         download_status.html(status);
+    });
+
+    play.click(() => {
+        if( !play.hasClass( "disable" ) ){
+            var child = cp.spawn( paths.wow, [], {detached: true, stdio: 'ignore'} );
+            child.unref();
+            electron.close();
+        }
     });
 
     $('.btn-1').click(() => {

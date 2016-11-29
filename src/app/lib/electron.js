@@ -86,6 +86,9 @@ var electron = {
     openURL(url){
         shell.openExternal(url);
     },
+    reinstall(){
+        ipcRenderer.send( 'reinstall', null );
+    },
     log( log ){
         ipcRenderer.send( 'log', log );
     },

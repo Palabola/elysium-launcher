@@ -15,10 +15,13 @@ $(function () {
         }
     });
 
-    $('.play').click(() => {
-        var child = cp.spawn(paths.wow, [], {detached: true, stdio: 'ignore'});
-        child.unref();
-        electron.close();
+    let play = $('.play');
+    play.click(() => {
+        if( !play.hasClass( "disable" ) ){
+            var child = cp.spawn(paths.wow, [], {detached: true, stdio: 'ignore'});
+            child.unref();
+            electron.close();
+        }
     });
 
     $('.btn-1').click(() => {
@@ -76,6 +79,18 @@ $(function () {
             });
         }
 
+    });
+
+    let reinstall = $('.reinstall');
+    reinstall.click(() => {
+        reinstall.html('<div class="loader"><div class="line-scale-party"><div></div><div></div><div></div><div></div></div></div>');
+        play.addClass('disable');
+        fs.emptyDir( paths.game, (err) => {
+            if (err) {
+                electron.err( err );
+            }
+            electron.reinstall();
+        });
     });
 
     $('.open-install').click(() => {
