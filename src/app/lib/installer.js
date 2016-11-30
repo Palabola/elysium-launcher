@@ -35,10 +35,10 @@ const Installer = function ( opts, electron ) {
     self._file = opts.file;
     self._checksum = opts.checksum;
     self._status = 0;
+    self._ver = opts.ver;
 
     let rar = path.join(self._paths.download, self._file);
     let cache = path.join(self._paths.extract, "World of Warcraft 1.12");
-    let ver = "1.12";
 
     function format(num) {
 
@@ -54,9 +54,9 @@ const Installer = function ( opts, electron ) {
 
     function install(){
 
-        self.emit('in-progress', `Started installing World of Warcraft ${ver}`);
+        self.emit('in-progress', `Started installing World of Warcraft ${self._ver}`);
         self._setStatus(status.installing);
-        electron.log(`Started installing World of Warcraft ${ver}`);
+        electron.log(`Started installing World of Warcraft ${self._ver}`);
 
         let _7z = (  process.env.NODE_ENV != 'development' ) ? path.join( self._paths.app, 'node_modules/win-7zip/7zip-lite/7z.exe').replace('app.asar', 'app.asar.unpacked' ) : require('win-7zip')['7z']
 
@@ -75,8 +75,8 @@ const Installer = function ( opts, electron ) {
 
         extract.on('exit', () => {
 
-            self.emit('in-progress', `Installing World of Warcraft ${ver}`);
-            electron.log( `Installing World of Warcraft ${ver}`);
+            self.emit('in-progress', `Installing World of Warcraft ${self._ver}`);
+            electron.log( `Installing World of Warcraft ${self._ver}`);
 
             fs.move( cache, self._paths.install, {clobber: true}, (err) => {
                 if (err) { electron.err( err ); }
@@ -101,7 +101,7 @@ const Installer = function ( opts, electron ) {
             self.torrent = torrent;
 
             self._setStatus(status.downloading);
-            electron.log(`Downloading World of Warcraft ${ver}`);
+            electron.log(`Downloading World of Warcraft ${self._ver}`);
 
             self.interval = setInterval(function () {
 

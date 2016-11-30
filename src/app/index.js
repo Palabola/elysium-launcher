@@ -7,11 +7,21 @@ const electron = require('./lib/electron.js'),
 
 window.$ = window.jQuery = require('jquery');
 
-$(function () {
+$(() => {
+
     electron.init({
         buttons: {
             close: 'close',
             minimize: 'min'
+        }
+    });
+
+    electron.getOpts(( err, opts )=>{
+        if (!err) {
+            electron.webview( opts.webview );
+        }else{
+            $('.connect-err').fadeIn(1000);
+            electron.err(err);
         }
     });
 

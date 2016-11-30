@@ -1,6 +1,9 @@
 const { remote, shell, ipcRenderer  }  = require('electron'),
-      { Menu, MenuItem } = remote;
-
+      { Menu, MenuItem } = remote,
+        paths = remote.getGlobal('paths'),
+        fs  = require('fs-extra'),
+        path  = require('path'),
+        request  = require('request');
 
 var electron = {
     window: remote.getCurrentWindow(),
@@ -16,22 +19,6 @@ var electron = {
         document.getElementById(options.buttons.minimize).addEventListener("click", (e) => {
             e.preventDefault();
             self.minimize()
-        });
-
-
-        let webview = document.getElementById('webview');
-
-        webview.addEventListener('new-window', (e) => {
-            const protocol = require('url').parse(e.url).protocol;
-            if (protocol === 'http:' || protocol === 'https:') {
-                shell.openExternal(e.url)
-            }
-        });
-
-        webview.addEventListener('did-fail-load', () => {
-            $('#webview').fadeOut(1000, () => {
-                $('.connect-err').fadeIn(1000);
-            });
         });
 
         if (process.env.NODE_ENV == 'development') {
@@ -94,6 +81,50 @@ var electron = {
     },
     err( err ){
         ipcRenderer.send( 'err', err );
+    },
+    getOpts( callback ){
+        request('https://cdn.rawgit.com/digipixel-io/elysium-launcher/master/front/settings.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                let obj = JSON.parse(body);
+                fs.writeFile( path.join( paths.home, 'settings.json' ), body, (err)=> {
+                    if (err) {
+                        callback( err, null );
+                    }else{
+                        callback( null, obj );
+                    }
+                });
+            } else {
+                fs.access(path.join(paths.home, 'settings.json'), fs.F_OK, (err) => {
+                    if (!err) {
+                        fs.readFile(path.join(paths.home, 'settings.json'), 'utf8', function (err, data) {
+                            if (err) {
+                                callback(err, null);
+                            } else {
+                                callback(null, JSON.parse(data));
+                            }
+                        });
+                    } else {
+                        callback('Request failed and file does not exist.', null);
+                    }
+                });
+            }
+        });
+    },
+    webview( url ){
+        $('.webview-wrapper').html(`<webview id="webview" style="display:none;" src="${url}"></webview>`);
+        $('#webview').fadeIn(1000);
+        let webview = document.getElementById('webview');
+        webview.addEventListener('new-window', (e) => {
+            const protocol = require('url').parse(e.url).protocol;
+            if (protocol === 'http:' || protocol === 'https:') {
+                shell.openExternal(e.url)
+            }
+        });
+        webview.addEventListener('did-fail-load', () => {
+            $('#webview').fadeOut(1000, () => {
+                $('.connect-err').fadeIn(1000);
+            });
+        });
     }
 };
 

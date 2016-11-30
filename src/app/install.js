@@ -4,11 +4,13 @@ const electron = require('./lib/electron.js'),
       path     = require('path'),
       cp       = require('child_process'),
       fs       = require('fs-extra'),
+      request  = require('request'),
       paths    = remote.getGlobal('paths');
 
 window.$ = window.jQuery = require('jquery');
 
 $(() => {
+
     electron.init({
         buttons: {
             close: 'close',
@@ -24,59 +26,73 @@ $(() => {
     let install_msg = $('.install-msg');
     let installed_wrapper = $('.installed-wrapper');
 
-    let installer = new Install({
-        paths: {
-            download: paths.download,
-            extract: paths.cache,
-            install: paths.game,
-            app: paths.app
-        },
-        file: "World of Warcraft 1.12 Client.rar",
-        checksum: '3a4b4d12e02e08b3ee4686fa56e8b2c3855e7001',
-        realmlist: "logon.elysium-project.org",
-        uri: "magnet:?xt=urn:btih:2b32e64f6cd755a9e54d60e205a9681d6670cfae&dn=World+of+Warcraft+Client+-+Version+1.12.1+enUS+-+Windows&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
-    }, electron );
 
-    installer.on('dl-progress', (data) => {
-        download_status.html(`Downloading: ${data.downloaded} / ${data.length} @ ${data.speed.download} <br> ${data.remaining}`);
-        bar.html(`${data.percent}%<div class="end">`);
-        bar.css({
-            background: () => {
-                return `hsl( ${data.percent}, 100%, 40% )`
-            },
-            width: () => {
-                return `${data.percent}%`
-            }
-        });
-    });
+    electron.getOpts(( err, opts )=>{
+        if ( !err ) {
 
-    installer.on('in-progress', (msg) => {
-        install_msg.html(`<span>${msg}</span>`);
-    });
+            electron.webview( opts.webview );
 
-    installer.on('status', (status) => {
+            let installer = new Install({
+                paths: {
+                    download: paths.download,
+                    extract: paths.cache,
+                    install: paths.game,
+                    app: paths.app
+                },
+                file: opts.install.file,
+                checksum: opts.install.checksum,
+                realmlist: opts.install.realmlist,
+                ver: opts.install.ver,
+                uri: opts.install.uri
+            }, electron );
 
-        switch (status) {
-            case 'idle':
-                break;
-            case 'downloading':
-                install_wrapper.fadeOut(250);
-                download_wrapper.fadeIn(250);
-                break;
-            case 'installing':
-                download_wrapper.fadeOut(250);
-                install_wrapper.fadeIn(250);
-                break;
-            case 'paused':
-                break;
-            case 'done':
-                install_wrapper.fadeOut(250);
-                installed_wrapper.html('<h1>World of Warcraft v1.12 Installed!</h1>');
-                installed_wrapper.fadeIn(250);
-                play.removeClass('disable');
-                break;
+            installer.on('dl-progress', (data) => {
+                download_status.html(`Downloading: ${data.downloaded} / ${data.length} @ ${data.speed.download} <br> ${data.remaining}`);
+                bar.html(`${data.percent}%<div class="end">`);
+                bar.css({
+                    background: () => {
+                        return `hsl( ${data.percent}, 100%, 40% )`
+                    },
+                    width: () => {
+                        return `${data.percent}%`
+                    }
+                });
+            });
+
+            installer.on('in-progress', (msg) => {
+                install_msg.html(`<span>${msg}</span>`);
+            });
+
+            installer.on('status', (status) => {
+
+                switch (status) {
+                    case 'idle':
+                        break;
+                    case 'downloading':
+                        install_wrapper.fadeOut(250);
+                        download_wrapper.fadeIn(250);
+                        break;
+                    case 'installing':
+                        download_wrapper.fadeOut(250);
+                        install_wrapper.fadeIn(250);
+                        break;
+                    case 'paused':
+                        break;
+                    case 'done':
+                        install_wrapper.fadeOut(250);
+                        installed_wrapper.html('<h1>World of Warcraft v1.12 Installed!</h1>');
+                        installed_wrapper.fadeIn(250);
+                        play.removeClass('disable');
+                        break;
+                }
+                download_status.html(status);
+            });
+
+        }else{
+            $('.connect-err').fadeIn(1000);
+            install_msg.html(`<span>Unable to get settings.json</span>`);
+            electron.err(err);
         }
-        download_status.html(status);
     });
 
     play.click(() => {
